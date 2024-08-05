@@ -1,6 +1,6 @@
 {
   "name": "@figliolia/modal-stack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A stack utility for managing open dialogs",
   "author": "Alex Figliolia",
   "scripts": {
@@ -25,6 +25,7 @@
     "stack"
   ],
   "dependencies": {
+    "@figliolia/data-structures": "^1.0.4",
     "@figliolia/event-emitter": "^1.1.4"
   },
   "peerDependencies": {},

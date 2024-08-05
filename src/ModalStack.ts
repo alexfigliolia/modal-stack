@@ -1,5 +1,5 @@
+import { QuickStack } from "@figliolia/data-structures";
 import { ModalToggle } from "./ModalToggle";
-import { QuickStack } from "./QuickStack";
 import type { Callback } from "./types";
 
 export class ModalStack extends QuickStack<Callback> {
