@@ -1,7 +1,7 @@
 import type { ModalStack } from "./ModalStack";
 import type { Callback } from "./types";
 
-export class ModalToggle<T extends any[]> {
+export class ModalToggle<T extends any[] = never[]> {
   public ID?: string;
   private closer: Callback;
   private opener: Callback<T>;
