@@ -1,7 +1,7 @@
 {
   "name": "@figliolia/modal-stack",
   "version": "1.0.0",
-  "description": "A modal-stack utility for managing stacked DOM layouts",
+  "description": "A stack utility for managing open dialogs",
   "author": "Alex Figliolia",
   "scripts": {
     "build": "ts-packager -e src",
@@ -18,7 +18,11 @@
     "url": "git+https://github.com/alexfigliolia/modal-stack.git"
   },
   "keywords": [
-    "modal-stack"
+    "modals",
+    "dialogs",
+    "toasts",
+    "notifications",
+    "stack"
   ],
   "dependencies": {
     "@figliolia/event-emitter": "^1.1.4"
@@ -31,7 +35,6 @@
     "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
-    "copyfiles": "^2.4.1",
     "eslint": "^8.39.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
