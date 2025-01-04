@@ -3,6 +3,7 @@ import type { Callback } from "./types";
 
 export class ModalToggle<T extends any[] = never[]> {
   public ID?: string;
+  public isOpen = false;
   private closer: Callback;
   private opener: Callback<T>;
   private stack: ModalStack;
@@ -13,6 +14,7 @@ export class ModalToggle<T extends any[] = never[]> {
   }
 
   public open = (...args: T) => {
+    this.isOpen = true;
     this.ID = this.stack.push(this.close);
     this.opener(...args);
   };
@@ -23,5 +25,6 @@ export class ModalToggle<T extends any[] = never[]> {
       this.ID = undefined;
     }
     this.closer();
+    this.isOpen = false;
   };
 }
