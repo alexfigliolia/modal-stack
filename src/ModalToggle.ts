@@ -5,7 +5,10 @@ import type { Callback } from "./types";
  * Modal Toggle
  *
  * An interface to simply managing a `ModalStack`
- * entry.
+ * entry. In addition to providing `open` and `close`
+ * methods for toggling your modal and managing the stack,
+ * the `ModalToggle` will also track the element that
+ * triggered the modal and return focus to it once closed
  */
 export class ModalToggle<T extends any[] = never[]> {
   public ID?: string;
@@ -13,6 +16,7 @@ export class ModalToggle<T extends any[] = never[]> {
   private closer: Callback;
   private opener: Callback<T>;
   private stack: ModalStack;
+  private trigger: HTMLElement | null = null;
   constructor(opener: Callback<T>, closer: Callback, stack: ModalStack) {
     this.stack = stack;
     this.opener = opener;
@@ -26,6 +30,7 @@ export class ModalToggle<T extends any[] = never[]> {
    * and adds the toggle's entry to the stack
    */
   public open = (...args: T) => {
+    this.trigger = (document?.activeElement as HTMLElement) ?? undefined;
     this.isOpen = true;
     this.ID = this.stack.push(this.close);
     this.opener(...args);
@@ -44,6 +49,8 @@ export class ModalToggle<T extends any[] = never[]> {
     }
     this.closer();
     this.isOpen = false;
+    this.trigger?.focus?.();
+    this.trigger = null;
   };
 
   /**
