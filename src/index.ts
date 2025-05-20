@@ -1,3 +1,4 @@
-export { ModalStack } from "./ModalStack";
 export { ModalToggle } from "./ModalToggle";
-export * from "./types";
+export { useModalToggle } from "./useModalToggle";
+export { FocusTrap } from "./FocusTrap";
+export { useFocusTrap } from "./useFocusTrap";
