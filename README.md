@@ -37,7 +37,7 @@ const myModalToggle = new ModalToggle(
           // your modal is open
 
 // To open your modal
-myModalToggle.open("myModal Message");
+myModalToggle.open();
 
 // To close your modal
 myModalToggle.close();
