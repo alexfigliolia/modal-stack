@@ -170,6 +170,14 @@ export const MyModal = ({ children }) => {
   );
 });
 ```
+## Popovers
+While functionally similar to modals, popovers differ in that:
+1. You don't trap focus inside of popovers
+2. Popovers don't have to return focus to their triggers when closed
+
+To support this difference in behavior, this library offers the `PopoverToggle` class as well as the `usePopoverToggle` react hook. 
+
+They work identically to `ModalToggle` and `useModalToggle` while omitting the behaviors mentioned above.
 
 ## Migrating From Prior Versions
 In the latest versions of `@figliolia/modal-stack`, the `ModalStack` utility is no longer exported. This means initializing an instance of `ModalStack` via `new ModalStack()` is no longer necessary.

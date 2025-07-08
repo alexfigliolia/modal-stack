@@ -1,5 +1,6 @@
 import { FocusTrap } from "./FocusTrap";
 import { ModalStack } from "./ModalStack";
+import { PopoverToggle } from "./PopoverToggle";
 import type { Callback } from "./types";
 
 /**
@@ -33,22 +34,18 @@ import type { Callback } from "./types";
  * toggle.close();
  * ```
  */
-export class ModalToggle<T extends any[] = never[]> {
-  public ID?: string;
-  public isOpen = false;
-  private closer: Callback;
-  private opener: Callback<T>;
+export class ModalToggle<T extends any[] = never[]> extends PopoverToggle<T> {
+  private superOpen: Callback<T> = this.open;
+  private superClose: Callback<[boolean]> = this.close;
   private subscriptionID?: string;
   private FocusTrap: FocusTrap | null = null;
-  private trigger: HTMLElement | null = null;
   private trapNode: HTMLElement | null = null;
   constructor(
     opener: Callback<T>,
     closer: Callback,
     trapNode: HTMLElement | null = null,
   ) {
-    this.opener = opener;
-    this.closer = closer;
+    super(opener, closer);
     this.trapNode = trapNode;
   }
 
@@ -59,10 +56,7 @@ export class ModalToggle<T extends any[] = never[]> {
    * and adds the toggle's entry to the stack
    */
   public open = (...args: T) => {
-    this.trigger = (document?.activeElement as HTMLElement) ?? undefined;
-    this.isOpen = true;
-    this.ID = ModalStack.push(this.close);
-    this.opener(...args);
+    this.superOpen(...args);
     this.subscribeFocusTrapping();
   };
 
@@ -72,23 +66,16 @@ export class ModalToggle<T extends any[] = never[]> {
    * Invokes the closer function passed through the constructor
    * and removes the toggle's entry from the stack
    */
-  public close = () => {
-    this.isOpen = false;
-    if (this.ID) {
-      ModalStack.delete(this.ID);
-      this.ID = undefined;
-    }
-    this.closer();
-    this.trigger?.focus?.();
-    this.trigger = null;
+  public override close = () => {
+    this.superClose(true);
     this.unsubscribeFocusTrapping();
   };
 
   /**
-   * Close
+   * Register Trap Node
    *
-   * Invokes the closer function passed through the constructor
-   * and removes the toggle's entry from the stack
+   * Registers a DOM element for focus to be trapped within
+   * when your modal opens
    */
   public registerTrapNode = (element: HTMLElement | null) => {
     this.trapNode = element;
@@ -104,36 +91,9 @@ export class ModalToggle<T extends any[] = never[]> {
    * you can cleanup related toggle logic by using this
    * method
    */
-  public destroy() {
-    this.isOpen = false;
-    if (this.ID) {
-      ModalStack.delete(this.ID);
-      this.ID = undefined;
-    }
-    this.closer();
-    this.trigger = null;
+  public override destroy() {
+    super.destroy();
     this.unsubscribeFocusTrapping();
-  }
-
-  /**
-   * Update
-   *
-   * If your opener/closer functions passed through the
-   * constructor are subject to change at runtime, use this
-   * method to update them
-   */
-  public update(opener: Callback<T>, closer: Callback) {
-    this.opener = opener;
-    this.closer = closer;
-  }
-
-  /**
-   * Close All Modals
-   *
-   * Closes all open modals
-   */
-  public static closeAllModals() {
-    ModalStack.closeAll();
   }
 
   private subscribeFocusTrapping() {
