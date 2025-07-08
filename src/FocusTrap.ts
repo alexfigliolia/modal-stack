@@ -113,17 +113,23 @@ export class FocusTrap {
     if (!trapNode) {
       return [];
     }
-    const nodes = [
-      ...trapNode.querySelectorAll(FocusTrap.FOCUSABLE_SELECTORS),
-    ].filter(
+    const nodes: Element[] = [];
+    if (trapNode && trapNode instanceof HTMLElement) {
+      const tabIndex = parseInt(trapNode.getAttribute("tabindex") ?? "-1");
+      if (tabIndex > -1) {
+        nodes.push(trapNode);
+      }
+    }
+    nodes.push(...trapNode.querySelectorAll(FocusTrap.FOCUSABLE_SELECTORS));
+    const focusableNodes = nodes.filter(
       node =>
         node.getAttribute("disabled") !== "true" &&
         node.getAttribute("aria-hidden") !== "true",
     ) as HTMLElement[];
-    const { length } = nodes;
+    const { length } = focusableNodes;
     const map = new Map<number, HTMLElement[]>();
     for (let i = 0; i < length; i++) {
-      const node = nodes[i];
+      const node = focusableNodes[i];
       if (node.tagName === "IFRAME") {
         const iframe = node as HTMLIFrameElement;
         let iframeNodes: HTMLElement[] = [];
@@ -136,8 +142,8 @@ export class FocusTrap {
     const entries = Array.from(map.entries());
     while (entries.length) {
       const [index, elements] = entries.pop()!;
-      nodes.splice(index, 1, ...elements);
+      focusableNodes.splice(index, 1, ...elements);
     }
-    return nodes;
+    return focusableNodes;
   }
 }
