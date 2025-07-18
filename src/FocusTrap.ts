@@ -99,12 +99,23 @@ export class FocusTrap {
 
   private onTab(container: HTMLElement) {
     const nodes = FocusTrap.getFocusableNodes(container);
-    if (this.shifting) {
-      const next = this.focusIndex - 1;
-      this.focusIndex = next < 0 ? nodes.length - 1 : next;
+    const currentIndex = nodes.indexOf(document.activeElement as HTMLElement);
+    if (currentIndex !== -1) {
+      if (this.shifting) {
+        const next = currentIndex - 1;
+        this.focusIndex = next < 0 ? nodes.length - 1 : next;
+      } else {
+        const next = currentIndex + 1;
+        this.focusIndex = next >= nodes.length ? 0 : next;
+      }
     } else {
-      const next = this.focusIndex + 1;
-      this.focusIndex = next >= nodes.length ? 0 : next;
+      if (this.shifting) {
+        const next = this.focusIndex - 1;
+        this.focusIndex = next < 0 ? nodes.length - 1 : next;
+      } else {
+        const next = this.focusIndex + 1;
+        this.focusIndex = next >= nodes.length ? 0 : next;
+      }
     }
     nodes[this.focusIndex].focus();
   }
@@ -123,6 +134,7 @@ export class FocusTrap {
     nodes.push(...trapNode.querySelectorAll(FocusTrap.FOCUSABLE_SELECTORS));
     const focusableNodes = nodes.filter(
       node =>
+        node.getAttribute("tabindex") !== "-1" &&
         node.getAttribute("disabled") !== "true" &&
         node.getAttribute("aria-hidden") !== "true",
     ) as HTMLElement[];
