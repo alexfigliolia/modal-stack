@@ -112,11 +112,6 @@ const App = () => {
 }
 ```
 
-### Motivation
-While the package may be named `@figliolia/modal-stack`, this library can be used to manage popovers of any kind without influencing your markup, UI, or imposing rules upon your workflow. 
-
-Simply wrap a dialog-like UI element's open/close logic in `new ModalToggle()` or `useModalToggle()` and your done!
-
 ## Cleaning Up
 When user leaves a part of your app that contains open dialog-like UI, it's usually pertantent to close each of the open dialogs before transitioning to a different part of your application. To do so, you can invoke the `closeAll()` static method on the `ModalToggle`:
 
@@ -189,4 +184,4 @@ The reason for this change is to simplify setup and diminish the possibility tha
 To fix that possibility the ModalStack now exists as a singleton that all `ModalToggles` share.
 
 #### Closing All Modals / Destroying the Stack
-`ModalStack.closeAll()` has been replaced with the static method `ModalToggle.closeAll()`.
+`ModalStack.closeAll()` has been replaced with the static method `ModalToggle.closeAll()` and/or `PopoverToggle.closeAll()`.

@@ -1,6 +1,7 @@
 import { QuickStack } from "@figliolia/data-structures";
 import { EventEmitter } from "@figliolia/event-emitter";
-import type { Callback, Emission } from "./types";
+import type { PopoverToggle } from "./PopoverToggle";
+import type { Emission } from "./types";
 
 /**
  * Modal Stack
@@ -9,18 +10,19 @@ import type { Callback, Emission } from "./types";
  * dialogs, or drawers
  */
 export class ModalStack {
-  private static storage = new QuickStack<Callback>();
+  private static storage = new QuickStack<PopoverToggle<any>>();
   public static readonly emitter = new EventEmitter<Emission>();
+
   /**
    * Push
    *
-   * Add's a modal's close method to the stack. Returns
+   * Add's a modal or popover toggle instance to the stack. Returns
    * a unique identifier that can be passed to `ModalStack.delete()`
-   * to remove the entry manually
+   * to remove the entry
    */
-  public static push(closerFN: Callback) {
-    const ID = this.storage.push(closerFN);
-    this.emit(ID);
+  public static push(instance: PopoverToggle<any>) {
+    const ID = this.storage.push(instance);
+    this.emit();
     if (this.totalEntries === 1) {
       window.addEventListener("keydown", this.keydown);
     }
@@ -30,13 +32,12 @@ export class ModalStack {
   /**
    * Pop
    *
-   * Closes the latest modal on the stack and
-   * removes its entry
+   * Closes the latest modal on the stack and removes its entry
    */
   public static pop() {
-    const callback = this.storage.pop();
-    if (callback) {
-      callback();
+    const toggle = this.storage.pop();
+    if (toggle) {
+      toggle.close();
       this.emit();
       if (!this.totalEntries) {
         window.removeEventListener("keydown", this.keydown);
@@ -47,10 +48,10 @@ export class ModalStack {
   /**
    * Peek
    *
-   * Returns the ID of the highest entry in the stack
+   * Returns the toggle at the top of the stack
    */
   public static peek() {
-    return this.storage.peek()?.[0];
+    return this.storage.peek()?.[1];
   }
 
   /**
@@ -91,13 +92,19 @@ export class ModalStack {
     return this.storage.length;
   }
 
+  static *[Symbol.iterator]() {
+    for (const entry of this.storage) {
+      yield entry;
+    }
+  }
+
   private static keydown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       this.pop();
     }
   };
 
-  private static emit(top = this.storage.peek()?.[0]) {
+  private static emit(top = this.storage.peek()?.[1]) {
     this.emitter.emit("change", top);
   }
 }

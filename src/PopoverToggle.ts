@@ -53,7 +53,7 @@ export class PopoverToggle<T extends any[] = never[]> {
   public open = (...args: T) => {
     this.trigger = (document?.activeElement as HTMLElement) ?? undefined;
     this.isOpen = true;
-    this.ID = ModalStack.push(this.close);
+    this.ID = ModalStack.push(this);
     this.opener(...args);
   };
 
