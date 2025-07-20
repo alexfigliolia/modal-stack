@@ -114,11 +114,11 @@ export class ModalToggle<T extends any[] = never[]> extends PopoverToggle<T> {
 
   private readonly onStackChange = () => {
     for (const [_, entry] of ModalStack) {
-      if (entry instanceof ModalToggle && entry !== this) {
+      if (entry instanceof ModalToggle) {
+        if (entry === this) {
+          return this.FocusTrap?.resume?.();
+        }
         return this.FocusTrap?.pause?.();
-      }
-      if (entry === this) {
-        return this.FocusTrap?.resume?.();
       }
     }
   };
