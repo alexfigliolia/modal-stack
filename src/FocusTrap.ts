@@ -79,7 +79,6 @@ export class FocusTrap {
     if (e.key !== "Tab") {
       return;
     }
-    console.log("tab recognized", this.trapNode);
     e.preventDefault();
     if (!this.trapNode) {
       return;
@@ -101,11 +100,6 @@ export class FocusTrap {
   private onTab(container: HTMLElement) {
     const nodes = FocusTrap.getFocusableNodes(container);
     const currentIndex = nodes.indexOf(document.activeElement as HTMLElement);
-    console.log("ON TAB", {
-      nodes,
-      instanceFocusIndex: this.focusIndex,
-      indexViaNodeList: currentIndex,
-    });
     if (currentIndex !== -1) {
       if (this.shifting) {
         const next = currentIndex - 1;
