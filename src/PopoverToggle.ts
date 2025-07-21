@@ -51,8 +51,11 @@ export class PopoverToggle<T extends any[] = never[]> {
    * and adds the toggle's entry to the stack
    */
   public open = (...args: T) => {
-    this.trigger = (document?.activeElement as HTMLElement) ?? undefined;
+    if (this.isOpen) {
+      return;
+    }
     this.isOpen = true;
+    this.trigger = (document?.activeElement as HTMLElement) ?? undefined;
     this.ID = ModalStack.push(this);
     this.opener(...args);
   };
@@ -64,12 +67,10 @@ export class PopoverToggle<T extends any[] = never[]> {
    * and removes the toggle's entry from the stack
    */
   public close = (returnFocus = true) => {
-    this.isOpen = false;
-    if (this.ID) {
-      ModalStack.delete(this.ID);
-      this.ID = undefined;
+    if (!this.isOpen) {
+      return;
     }
-    this.closer();
+    this.invokeClosing();
     if (returnFocus) {
       this.trigger?.focus?.();
       this.trigger = null;
@@ -84,12 +85,10 @@ export class PopoverToggle<T extends any[] = never[]> {
    * method
    */
   public destroy() {
-    this.isOpen = false;
-    if (this.ID) {
-      ModalStack.delete(this.ID);
-      this.ID = undefined;
+    if (!this.isOpen) {
+      return;
     }
-    this.closer();
+    this.invokeClosing();
     this.trigger = null;
   }
 
@@ -112,5 +111,14 @@ export class PopoverToggle<T extends any[] = never[]> {
    */
   public static closeAll() {
     ModalStack.closeAll();
+  }
+
+  private invokeClosing() {
+    this.isOpen = false;
+    if (this.ID) {
+      ModalStack.delete(this.ID);
+      this.ID = undefined;
+    }
+    this.closer();
   }
 }

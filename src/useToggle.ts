@@ -17,5 +17,11 @@ export const useToggle = <
     toggle.update(open, close);
   }, [open, close, toggle]);
 
+  useEffect(() => {
+    return () => {
+      toggle.destroy();
+    };
+  }, [toggle]);
+
   return toggle as InstanceType<V>;
 };
