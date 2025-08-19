@@ -156,7 +156,6 @@ export class FocusTrap {
       const [index, elements] = entries.pop()!;
       focusableNodes.splice(index, 0, ...elements);
     }
-    console.log("FOCUSABLE NODES", focusableNodes);
     return focusableNodes;
   }
 }
