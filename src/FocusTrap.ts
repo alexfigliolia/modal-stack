@@ -134,7 +134,7 @@ export class FocusTrap {
     nodes.push(...trapNode.querySelectorAll(FocusTrap.FOCUSABLE_SELECTORS));
     const focusableNodes = nodes.filter(
       node =>
-        parseInt(node.getAttribute("tabindex") ?? "-1") <= -1 ||
+        parseInt(node.getAttribute("tabindex") ?? "0") > -1 ||
         node.getAttribute("disabled") !== "true" ||
         node.getAttribute("aria-hidden") !== "true",
     ) as HTMLElement[];
@@ -154,8 +154,9 @@ export class FocusTrap {
     const entries = Array.from(map.entries());
     while (entries.length) {
       const [index, elements] = entries.pop()!;
-      focusableNodes.splice(index, 1, ...elements);
+      focusableNodes.splice(index, 0, ...elements);
     }
+    console.log("FOCUSABLE NODES", focusableNodes);
     return focusableNodes;
   }
 }
