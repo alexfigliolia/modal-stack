@@ -134,8 +134,8 @@ export class FocusTrap {
     nodes.push(...trapNode.querySelectorAll(FocusTrap.FOCUSABLE_SELECTORS));
     const focusableNodes = nodes.filter(
       node =>
-        node.getAttribute("tabindex") !== "-1" &&
-        node.getAttribute("disabled") !== "true" &&
+        parseInt(node.getAttribute("tabindex") ?? "-1") <= -1 ||
+        node.getAttribute("disabled") !== "true" ||
         node.getAttribute("aria-hidden") !== "true",
     ) as HTMLElement[];
     const { length } = focusableNodes;
