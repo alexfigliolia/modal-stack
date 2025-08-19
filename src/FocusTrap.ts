@@ -1,3 +1,4 @@
+import { tabbable } from "tabbable";
 /**
  * Focus Trap
  *
@@ -18,8 +19,6 @@ export class FocusTrap {
   private active = false;
   private shifting = false;
   private trapNode: HTMLElement;
-  public static readonly FOCUSABLE_SELECTORS =
-    "a[href], button, input, textarea, iframe, select, details, [tabindex]:not([tabindex='-1']";
   constructor(trapNode: HTMLElement) {
     this.trapNode = trapNode;
     this.resume();
@@ -124,38 +123,10 @@ export class FocusTrap {
     if (!trapNode) {
       return [];
     }
-    const nodes: Element[] = [];
-    if (trapNode && trapNode instanceof HTMLElement) {
-      const tabIndex = parseInt(trapNode.getAttribute("tabindex") ?? "-1");
-      if (tabIndex > -1) {
-        nodes.push(trapNode);
-      }
-    }
-    nodes.push(...trapNode.querySelectorAll(FocusTrap.FOCUSABLE_SELECTORS));
-    const focusableNodes = nodes.filter(
-      node =>
-        parseInt(node.getAttribute("tabindex") ?? "0") > -1 ||
-        node.getAttribute("disabled") !== "true" ||
-        node.getAttribute("aria-hidden") !== "true",
-    ) as HTMLElement[];
-    const { length } = focusableNodes;
-    const map = new Map<number, HTMLElement[]>();
-    for (let i = 0; i < length; i++) {
-      const node = focusableNodes[i];
-      if (node.tagName === "IFRAME") {
-        const iframe = node as HTMLIFrameElement;
-        let iframeNodes: HTMLElement[] = [];
-        if (iframe.contentDocument) {
-          iframeNodes = this.getFocusableNodes(iframe.contentDocument);
-        }
-        map.set(i, iframeNodes);
-      }
-    }
-    const entries = Array.from(map.entries());
-    while (entries.length) {
-      const [index, elements] = entries.pop()!;
-      focusableNodes.splice(index, 0, ...elements);
-    }
-    return focusableNodes;
+    return tabbable(trapNode as Element, {
+      displayCheck: "full",
+      getShadowRoot: true,
+      includeContainer: true,
+    });
   }
 }
