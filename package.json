@@ -1,6 +1,6 @@
 {
   "name": "@figliolia/modal-stack",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "A stack utility for managing open dialogs",
   "author": "Alex Figliolia",
   "scripts": {
@@ -27,15 +27,16 @@
   "dependencies": {
     "@figliolia/data-structures": "^1.2.1",
     "@figliolia/event-emitter": "^1.1.6",
-    "@figliolia/react-hooks": "^1.7.0",
+    "@figliolia/react-hooks": "^1.7.3",
     "react": "^18.0 || ^19",
     "tabbable": "^6.2.0"
   },
   "peerDependencies": {
     "@figliolia/data-structures": "^1.2.1",
     "@figliolia/event-emitter": "^1.1.6",
-    "@figliolia/react-hooks": "^1.7.0",
-    "react": "^18.0 || ^19"
+    "@figliolia/react-hooks": "^1.7.3",
+    "react": "^18.0 || ^19",
+    "tabbable": "^6.2.0"
   },
   "devDependencies": {
     "@figliolia/child-process": "^1.0.4",
